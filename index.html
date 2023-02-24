@@ -76,25 +76,22 @@
             //the g just means global so it searches the whole string/value of path
             //fetch correct listing
             var location = window.location.pathname;
-            console.log("Directory location: " + location)
-            // var myGitHubApiURL = 'https://api.github.com/repos/Franco-Henriquez/Web_Fundamentals/contents/'
+            // console.log("Directory location: " + location)
             var directoryName = path.substring(path.lastIndexOf("/")+1); /*current working directory*/
-            
-            console.log("Directory name: " + directoryName)
+            // console.log("Directory name: " + directoryName)
             var countOfDir = (path.match(/\//g) || []).length;
-            console.log("Count of forwardslashes : " + countOfDir)
+            // console.log("Count of forwardslashes : " + countOfDir)
+
             if (countOfDir >= 2 ) {
               //then it's a subdirectory
-              console.log("It's a subdirectory!")
-              // var directoryPaths = location.substring(1, location.lastIndexOf("/")+1);
-              // console.log("Directory Paths: " + directoryPaths)
+              // console.log("It's a subdirectory!")
               const pathFolder = [];
               pathFolder.push(location.split( '/' )[2]);
               pathFolder.push(location.split( '/' )[3]);
-              console.log("Path Array: " + pathFolder);
+              // console.log("Path Array: " + pathFolder);
               var rebuiltPath = pathFolder[0] + "/" + pathFolder[1] + "/";
-              console.log("Subdirectories only: " + pathFolder[0] + "/" + pathFolder[1] + "/");
-              var myGitHubApiURL = myGitHubApiURL + rebuiltPath;
+              // console.log("Subdirectories only: " + pathFolder[0] + "/" + pathFolder[1] + "/");
+              myGitHubApiURL += rebuiltPath;
               // console.log("Repo: " + myGitHubApiURL)
               return myGitHubApiURL;
             } else if (myRepo.includes(".") == true && countOfDir == 1) {
@@ -103,15 +100,13 @@
               var myGitHubApiURL = myGitHubApiURL + directoryName;
               return myGitHubApiURL;
             } else if (countOfDir == 1) {
-              console.log("It's a Repo disguised as a subdirectory!");
+              // console.log("It's a Repo disguised as a subdirectory!");
               //do not make changes to GitHub URL
-              var myGitHubApiURL = myGitHubApiURL;
               // console.log("Repo: " + myGitHubApiURL)
               return myGitHubApiURL;
             } else if (countOfDir == null || countOfDir == 0) {
               //then it's a repo
-              console.log("It's a Repo!")
-              var myGitHubApiURL = myGitHubApiURL;
+              // console.log("It's a Repo!")
               // console.log("Repo: " + myGitHubApiURL)
               return myGitHubApiURL;
             }
@@ -123,19 +118,21 @@
           var location = window.location.pathname;
           var path = location.substring(0, location.lastIndexOf("/"));
           var directoryName = path.substring(path.lastIndexOf("/")+1); /*current working directory*/
-          console.log("Path: " + path)
-          console.log("Repo 1: " + myGitHubApiURL)
+          // console.log("Path: " + path)
+          // console.log("Repo 1: " + myGitHubApiURL)
           // var myGitHubApiURL = myGitHubApiURL + domainLessPath; //remake this to check if its repostory or not
           var myGitHubApiURL = checkIfRepo(myRepo,myGitHubApiURL,path);
-          console.log("Repo 2: " + myGitHubApiURL)
+          // console.log("Repo 2: " + myGitHubApiURL)
           const response = await fetch(myGitHubApiURL);
           // console.log("this is the response " + response)
           const data = await response.json();
           // console.log("this is the data " + data)
           
+
+          //start of rebuilding the html
           let htmlString = '<h1>Directory Listing: <span id="directory-name">' + directoryName +'</span></h1>';
           htmlString += '<ul>';
-          
+          //api shows a listing of dir and other data as obj. We grab only file names and make sure there's only one of iteration
           for (let file of data) {
             if (file.name != 'index.html' && file.name != '.gitignore' && file.name.includes(".") != true )
             {
@@ -147,6 +144,7 @@
           }
 
           htmlString += '</ul>';
+          //this determines where the built html will be inserted or replaced into. Int this case, within the element of id file-directory
           document.getElementById('file-directory').innerHTML = htmlString;
         
         })()
