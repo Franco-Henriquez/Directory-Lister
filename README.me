@@ -1,0 +1,37 @@
+**CAUTION** Make sure you backup your repositories! I am not responsible for you overwriting your own index.html and css files!
+
+#DIRECTORY LISTER
+This script will index your empty folders so that they become accesible as if they were File Explorer or FTP directories listings. 
+Folder and file listing added.
+
+#REQUIREMENTS:
+have github pages already set up (instructions here https://pages.github.com/)
+code editor like notepad
+
+#INSTRUCTIONS:
+First you want to clone a copy of this repository and then edit the following line in index.html file:
+
+var myRepos = 'https://api.github.com/repos/Franco-Henriquez/franco-henriquez.github.io/contents/'
+
+Use the following information as examples:
+
+Username: Java-Hearts
+Github Page: java-hearts.github.io
+
+You will change the code as follow:
+
+var myRepos = 'https://api.github.com/repos/Java-Hearts/java-hearts.github.io/contents/'
+
+Now, go ahead and use your own username and git page url.
+
+Save your changes and place the index.html in all empty folders within your repositories that you want to have automatic listings of.
+And voila, the script will per page load. :)))
+
+A separate css was left there as optional but everything has been combined into a single html file.
+
+#COMMON ERRORS
+
+404 will happen in any github directory that does not have an index.html file.
+
+Infinite "Directory Loading..." can happen if the API changes (out of your control) or
+if your DNS, ISP or Firewall is blocking or unable to resolve https://api.github.com/

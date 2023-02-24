@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Franco's Git Page</title>
+    <!-- <link rel="stylesheet" href="./style.css"> -->
+    <style>
+      @font-face {
+      font-family: 'Terminal';
+      font-style: normal;
+      font-weight: 500;
+      src: local('Terminal'), url('https://fonts.cdnfonts.com/s/83558/Terminal.woff') format('woff');
+      }
+
+      ul li {
+          list-style-type: none;
+      }
+
+      ul li * {
+          text-decoration: none;
+          color: blue;
+          font-family: sans-serif;
+      }
+
+      * {
+          padding: 0;
+          margin: 0;
+          font-family: 'Terminal', sans-serif;
+      }
+
+      h1 {
+          text-transform: uppercase;
+          margin: 0 0 2% 0;
+      }
+
+      #file-directory {
+          padding: 2%;
+      }
+
+      #directory-name {
+          color: blue;
+      }
+
+      .loading-anim {
+          border: 16px solid #e8e8e8;
+          border-radius: 50%;
+          border-top: 16px solid #5dbf25;
+          width: 60px;
+          height: 60px;
+          -webkit-animation: spin 2s linear infinite; /* Safari */
+          animation: spin 2s linear infinite;
+      }
+
+      /* Safari */
+      @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+      }
+
+      @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+      }
+    </style>
+</head>
+<body>
+    <div id="file-directory">
+      <h1>Directory Loading...</h1>
+      <div class="loading-anim"></div>
+      <script>
+        (async () => {
+          function checkIfRepo(myRepo,myGitHubApiURL,path){
+            //we're counting how many forwardslasher there are, but for it to be read it needs to be escaped with a backslash
+            //the g just means global so it searches the whole string/value of path
+            //fetch correct listing
+            var location = window.location.pathname;
+            console.log("Directory location: " + location)
+            // var myGitHubApiURL = 'https://api.github.com/repos/Franco-Henriquez/Web_Fundamentals/contents/'
+            var directoryName = path.substring(path.lastIndexOf("/")+1); /*current working directory*/
+            
+            console.log("Directory name: " + directoryName)
+            var countOfDir = (path.match(/\//g) || []).length;
+            console.log("Count of forwardslashes : " + countOfDir)
+            if (countOfDir >= 2 ) {
+              //then it's a subdirectory
+              console.log("It's a subdirectory!")
+              // var directoryPaths = location.substring(1, location.lastIndexOf("/")+1);
+              // console.log("Directory Paths: " + directoryPaths)
+              const pathFolder = [];
+              pathFolder.push(location.split( '/' )[2]);
+              pathFolder.push(location.split( '/' )[3]);
+              console.log("Path Array: " + pathFolder);
+              var rebuiltPath = pathFolder[0] + "/" + pathFolder[1] + "/";
+              console.log("Subdirectories only: " + pathFolder[0] + "/" + pathFolder[1] + "/");
+              var myGitHubApiURL = myGitHubApiURL + rebuiltPath;
+              // console.log("Repo: " + myGitHubApiURL)
+              return myGitHubApiURL;
+            } else if (myRepo.includes(".") == true && countOfDir == 1) {
+              // checks to see if repo has any decimals. aka is a domain name
+              // handle this as subdirectory
+              var myGitHubApiURL = myGitHubApiURL + directoryName;
+              return myGitHubApiURL;
+            } else if (countOfDir == 1) {
+              console.log("It's a Repo disguised as a subdirectory!");
+              //do not make changes to GitHub URL
+              var myGitHubApiURL = myGitHubApiURL;
+              // console.log("Repo: " + myGitHubApiURL)
+              return myGitHubApiURL;
+            } else if (countOfDir == null || countOfDir == 0) {
+              //then it's a repo
+              console.log("It's a Repo!")
+              var myGitHubApiURL = myGitHubApiURL;
+              // console.log("Repo: " + myGitHubApiURL)
+              return myGitHubApiURL;
+            }
+              // console.log("Repo: " + myGitHubApiURL)
+          }
+          var myUserName = "Franco-Henriquez"
+          var myRepo = "Web_Fundamentals"
+          var myGitHubApiURL = 'https://api.github.com/repos/'+myUserName+'/'+myRepo+'/contents/'
+          var location = window.location.pathname;
+          var path = location.substring(0, location.lastIndexOf("/"));
+          var directoryName = path.substring(path.lastIndexOf("/")+1); /*current working directory*/
+          console.log("Path: " + path)
+          console.log("Repo 1: " + myGitHubApiURL)
+          // var myGitHubApiURL = myGitHubApiURL + domainLessPath; //remake this to check if its repostory or not
+          var myGitHubApiURL = checkIfRepo(myRepo,myGitHubApiURL,path);
+          console.log("Repo 2: " + myGitHubApiURL)
+          const response = await fetch(myGitHubApiURL);
+          // console.log("this is the response " + response)
+          const data = await response.json();
+          // console.log("this is the data " + data)
+          
+          let htmlString = '<h1>Directory Listing: <span id="directory-name">' + directoryName +'</span></h1>';
+          htmlString += '<ul>';
+          
+          for (let file of data) {
+            if (file.name != 'index.html' && file.name != '.gitignore' && file.name.includes(".") != true )
+            {
+              htmlString += `<li>&#x1F4C2;<a href="${path}/${file.name}/">${file.name}</a></li>`;
+            } else if (file.name != 'index.html' && file.name.includes("css") != true && file.name.includes(".") == true)
+            {
+              htmlString += `<li>&#128196;<a href="${path}/${file.name}">${file.name}</a></li>`;
+            }
+          }
+
+          htmlString += '</ul>';
+          document.getElementById('file-directory').innerHTML = htmlString;
+        
+        })()
+      </script>
+    </div>
+</body>
+</html>
