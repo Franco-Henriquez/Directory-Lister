@@ -119,16 +119,15 @@
             htmlString += '<p><a href="https://github.com/Franco-Henriquez/Directory-Lister/">See instructions here.</a></p>'
             document.getElementById('file-directory').innerHTML = htmlString;
           } else {
+            //build githubapi url with user data
             var myGitHubApiURL = 'https://api.github.com/repos/'+myUserName+'/'+myRepo+'/contents/'
             var location = window.location.pathname;
             var path = location.substring(0, location.lastIndexOf("/"));
             var directoryName = path.substring(path.lastIndexOf("/")+1); /*current working directory*/
             var myGitHubApiURL = checkIfRepo(myRepo,myGitHubApiURL,path);
-            
+            //fetch responses and store them
             const response = await fetch(myGitHubApiURL);
-            
             const data = await response.json();
-
             //start of rebuilding the html
             let htmlString = '<h1>Directory Listing: <span id="directory-name">' + directoryName +'</span></h1>';
             htmlString += '<ul>';
@@ -142,7 +141,6 @@
                 htmlString += `<li>&#128196;<a href="${path}/${file.name}">${file.name}</a></li>`;
               }
             }
-
             htmlString += '</ul>';
             //this determines where the built html will be inserted or replaced into. In this case, within the element IDed file-directory
             document.getElementById('file-directory').innerHTML = htmlString;
