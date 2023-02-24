@@ -1,27 +1,34 @@
-**CAUTION** Make sure you backup your repositories! I am not responsible for you overwriting your own index.html and css files!
+**CAUTION** Make sure you backup/clone your repositories. I am not responsible for you overwriting your own index.html and css files.
 
 #DIRECTORY LISTER
 This html/js will index your GitHub empty folders when being access through the Pages feature of GitHub. This will allow browsing access as if through File Explorer or as if using an FTP client. 
+
+What directory lister does not do:
+It does not remove or alter any files.
+It does not handle files, it simply lists them for your browser to do the mime handling.
 
 #REQUIREMENTS:
 - Enable pages in each repository that does not already use an inde.html file.
 - Text editor like notepad.
 
 #INSTRUCTIONS:
-Download the index.html file
+Download the index.html file and place it in any repositary that does not already have an index.html file in it.
+You will edit the following two variables to suit your specific repositories.
 
-var myRepos = 'https://api.github.com/repos/Franco-Henriquez/franco-henriquez.github.io/contents/'
+var myUserName = "Your User Name Here"
+var myRepo = "Your Repo or Page url here"
 
 Use the following information as examples:
 
 Username: Java-Hearts
-Github Page: java-hearts.github.io
+Github Repository/Page: java-hearts.github.io
 
 You will change the code as follow:
 
-var myRepos = 'https://api.github.com/repos/Java-Hearts/java-hearts.github.io/contents/'
+var myUserName = "Java-Hearts"
+var myRepo = "java-hearts.github.io"
 
-Now, go ahead and use your own username and git page url.
+Now, go ahead and use your own username and git page url or git repository name in place of the samples above.
 
 Save your changes and place the index.html in all empty folders within your repositories that you want to have automatic listings of.
 And voila, the script will per page load. :)))
@@ -30,7 +37,7 @@ A separate css was left there as optional but everything has been combined into 
 
 #COMMON ERRORS
 
-404 will happen in any github directory that does not have an index.html file.
+Error 404 will happen in any github directory that does not have an index.html file.
 
 Infinite "Directory Loading..." can happen if the API changes (out of your control) or
-if your DNS, ISP or Firewall is blocking or unable to resolve https://api.github.com/
+if your DNS, ISP or Firewall is blocking or unable to resolve https://api.github.com/ or if you have reached the daily (5000 quieries?) limit for api access.
