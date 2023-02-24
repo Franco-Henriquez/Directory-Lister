@@ -5,44 +5,36 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Franco's Git Page</title>
-    <!-- <link rel="stylesheet" href="./style.css"> -->
     <style>
+      * {
+          padding: 0;
+          margin: 0;
+      }
       @font-face {
       font-family: 'Terminal';
       font-style: normal;
       font-weight: 500;
       src: local('Terminal'), url('https://fonts.cdnfonts.com/s/83558/Terminal.woff') format('woff');
       }
-
       ul li {
           list-style-type: none;
       }
-
       ul li * {
           text-decoration: none;
           color: blue;
-          font-family: sans-serif;
-      }
-
-      * {
-          padding: 0;
-          margin: 0;
           font-family: 'Terminal', sans-serif;
       }
-
       h1 {
+          font-family: sans-serif;
           text-transform: uppercase;
           margin: 0 0 2% 0;
       }
-
       #file-directory {
           padding: 2%;
       }
-
       #directory-name {
           color: blue;
       }
-
       .loading-anim {
           border: 16px solid #e8e8e8;
           border-radius: 50%;
@@ -52,13 +44,17 @@
           -webkit-animation: spin 2s linear infinite; /* Safari */
           animation: spin 2s linear infinite;
       }
-
+      footer {
+        font-family: sans-serif;
+        margin: 0 0 0 2%;
+        bottom: 2%;
+        position:absolute;
+      }
       /* Safari */
       @-webkit-keyframes spin {
       0% { -webkit-transform: rotate(0deg); }
       100% { -webkit-transform: rotate(360deg); }
       }
-
       @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -112,43 +108,51 @@
             }
               // console.log("Repo: " + myGitHubApiURL)
           }
-          var myUserName = "Franco-Henriquez"
-          var myRepo = "Web_Fundamentals"
-          var myGitHubApiURL = 'https://api.github.com/repos/'+myUserName+'/'+myRepo+'/contents/'
-          var location = window.location.pathname;
-          var path = location.substring(0, location.lastIndexOf("/"));
-          var directoryName = path.substring(path.lastIndexOf("/")+1); /*current working directory*/
-          // console.log("Path: " + path)
-          // console.log("Repo 1: " + myGitHubApiURL)
-          // var myGitHubApiURL = myGitHubApiURL + domainLessPath; //remake this to check if its repostory or not
-          var myGitHubApiURL = checkIfRepo(myRepo,myGitHubApiURL,path);
-          // console.log("Repo 2: " + myGitHubApiURL)
-          const response = await fetch(myGitHubApiURL);
-          // console.log("this is the response " + response)
-          const data = await response.json();
-          // console.log("this is the data " + data)
-          
+          //USER EDITS
+          let myUserName = "Your_GitHub_User_Name_Here";
+          let myRepo = "Your_Repository_Name_Here";
+          //END USER EDITS
+          if ( !myUserName || !myRepo || myUserName == "Your_GitHub_User_Name_Here" || myRepo == "Your_Repository_Name_Here") {
+            alert("Unable to process, you must first edit this html file's variables.");
+            let htmlString = '<h1>API Access Error</h1>';
+            htmlString += '<p>Please edit <i>myUserName</i> and <i>myRepo</i> accordingly.</p>'
+            htmlString += '<p><a href="https://github.com/Franco-Henriquez/Directory-Lister/">See instructions here.</a></p>'
+            document.getElementById('file-directory').innerHTML = htmlString;
+          } else {
+            var myGitHubApiURL = 'https://api.github.com/repos/'+myUserName+'/'+myRepo+'/contents/'
+            var location = window.location.pathname;
+            var path = location.substring(0, location.lastIndexOf("/"));
+            var directoryName = path.substring(path.lastIndexOf("/")+1); /*current working directory*/
+            var myGitHubApiURL = checkIfRepo(myRepo,myGitHubApiURL,path);
+            
+            const response = await fetch(myGitHubApiURL);
+            
+            const data = await response.json();
 
-          //start of rebuilding the html
-          let htmlString = '<h1>Directory Listing: <span id="directory-name">' + directoryName +'</span></h1>';
-          htmlString += '<ul>';
-          //api shows a listing of dir and other data as obj. We grab only file names and make sure there's only one of iteration
-          for (let file of data) {
-            if (file.name != 'index.html' && file.name != '.gitignore' && file.name.includes(".") != true )
-            {
-              htmlString += `<li>&#x1F4C2;<a href="${path}/${file.name}/">${file.name}</a></li>`;
-            } else if (file.name != 'index.html' && file.name.includes("css") != true && file.name.includes(".") == true)
-            {
-              htmlString += `<li>&#128196;<a href="${path}/${file.name}">${file.name}</a></li>`;
+            //start of rebuilding the html
+            let htmlString = '<h1>Directory Listing: <span id="directory-name">' + directoryName +'</span></h1>';
+            htmlString += '<ul>';
+            //api shows a listing of dir and other data as obj. We grab only file names and make sure there's only one of iteration
+            for (let file of data) {
+              if (file.name != 'index.html' && file.name != '.gitignore' && file.name.includes(".") != true )
+              {
+                htmlString += `<li>&#x1F4C2;<a href="${path}/${file.name}/">${file.name}</a></li>`;
+              } else if (file.name != 'index.html' && file.name.includes("css") != true && file.name.includes(".") == true)
+              {
+                htmlString += `<li>&#128196;<a href="${path}/${file.name}">${file.name}</a></li>`;
+              }
             }
-          }
 
-          htmlString += '</ul>';
-          //this determines where the built html will be inserted or replaced into. Int this case, within the element of id file-directory
-          document.getElementById('file-directory').innerHTML = htmlString;
+            htmlString += '</ul>';
+            //this determines where the built html will be inserted or replaced into. In this case, within the element IDed file-directory
+            document.getElementById('file-directory').innerHTML = htmlString;
+          }
         
         })()
       </script>
     </div>
+    <footer>
+      <a href="https://github.com/Franco-Henriquez/Directory-Lister/" target="_blank">Copyright 2022 Franco Henriquez</a> |  <a href="https://docs.github.com/en/rest/licenses" target="_blank">GitHub API</a>
+    </footer>
 </body>
 </html>
